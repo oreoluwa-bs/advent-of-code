@@ -24,7 +24,7 @@ func main() {
 	partOne(file)
 	file.Seek(0, 0) // reset back to 0
 	// fmt.Println("-------------PART TWO---------------")
-	// partTwo(file)
+	partTwo(file)
 }
 
 func partOne(file *os.File) {
@@ -58,4 +58,51 @@ func partOne(file *os.File) {
 	}
 
 	fmt.Println("Sum of points is: ", total)
+}
+
+func partTwo(file *os.File) {
+	scanner := bufio.NewScanner(file)
+
+	total := 0
+	cardList := make([]string, 0)
+	multiplicity := make([]int, 0)
+
+	for scanner.Scan() {
+		text := scanner.Text()
+
+		cardList = append(cardList, strings.Split(text, ":")[1])
+		multiplicity = append(multiplicity, 1)
+	}
+	// fmt.Println(multiplicity)
+
+	for i, card := range cardList {
+		winCount := calcCardsWon(card)
+		if winCount > 0 {
+			for j := 1; j <= winCount; j++ {
+				multiplicity[i+j] += multiplicity[i]
+			}
+		}
+	}
+
+	for _, count := range multiplicity {
+		total += count
+	}
+
+	fmt.Println("Sum of points is: ", total)
+}
+
+func calcCardsWon(card string) int {
+	// split by  : to get cards
+	// split by | to get card groups
+	cards := strings.Split(card, "|")
+	winning, mycards := strings.Fields(cards[0]), strings.Fields(cards[1])
+
+	count := 0
+	for _, winNum := range winning {
+		if slices.Contains(mycards, winNum) {
+			count++
+		}
+	}
+
+	return count
 }
