@@ -117,8 +117,6 @@ func partOne(file *os.File) {
 
 		sort.Sort(sort.Reverse(sort.IntSlice(counts)))
 
-		fmt.Println(counts)
-
 		if counts[0] == 5 {
 			currHand = handMap["5k"]
 		}
