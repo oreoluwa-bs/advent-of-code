@@ -23,7 +23,7 @@ func main() {
 
 	partOne(file)
 	file.Seek(0, 0) // reset back to 0
-	// fmt.Println("-------------PART TWO---------------")
+	fmt.Println("-------------PART TWO---------------")
 	partTwo(file)
 }
 
@@ -87,7 +87,7 @@ func partOne(file *os.File) {
 			}
 		}
 
-		fmt.Println((upper - lower) + 1)
+		// fmt.Println((upper - lower) + 1)
 
 		multiple *= (upper - lower) + 1
 
@@ -96,7 +96,53 @@ func partOne(file *os.File) {
 	fmt.Println("Multiple: ", multiple)
 }
 func partTwo(file *os.File) {
+	scanner := bufio.NewScanner(file)
 
+	race := RaceLimits{}
+
+	for scanner.Scan() {
+		text := scanner.Text()
+
+		if strings.HasPrefix(text, "Time:") {
+			v := strings.Split(text, "Time:")[1]
+			times := strings.Join(strings.Fields(v), "")
+
+			race.time = atoi(times)
+
+		}
+
+		if strings.HasPrefix(text, "Distance:") {
+			v := strings.Split(text, "Distance:")[1]
+			distance := strings.Join(strings.Fields(v), "")
+
+			race.distance = atoi(distance)
+
+		}
+	}
+
+	multiple := 1
+
+	upper, lower := 0, 0
+
+	for i := 0; i < race.time; i++ {
+		if (i * (race.time - i)) > race.distance {
+			lower = i
+		}
+
+		j := race.time - i
+		if (j * i) > race.distance {
+			upper = j
+		}
+
+		if upper != 0 && lower != 0 {
+			break
+		}
+	}
+
+	// fmt.Println((upper - lower) + 1)
+	multiple *= (upper - lower) + 1
+
+	fmt.Println("Multiple: ", multiple)
 }
 
 func atoi(s string) int {
