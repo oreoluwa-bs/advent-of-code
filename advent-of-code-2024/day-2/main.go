@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 )
+
 func main() {
 	if len(os.Args[1:]) < 1 {
 		log.Fatal("Please input file path")
@@ -69,6 +70,7 @@ func partTwo(file *os.File) {
 
 	fmt.Println("Part two: ", safeC)
 }
+
 func toInt(s string) int {
 	n, err := strconv.Atoi(s)
 	if err != nil {
@@ -76,12 +78,14 @@ func toInt(s string) int {
 	}
 	return n
 }
+
 func abs(a int) int {
 	if a < 0 {
 		return a * -1
 	}
 	return a
 }
+
 func isMonotonous(inp []int) bool {
 	increasing, decreasing := true, true
 
