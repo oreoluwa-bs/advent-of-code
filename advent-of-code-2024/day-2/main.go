@@ -1,4 +1,5 @@
 package main
+
 import (
 	"bufio"
 	"fmt"
@@ -33,26 +34,13 @@ func partOne(file *os.File) {
 	for scanner.Scan() {
 		text := scanner.Text()
 		f := strings.Fields(text)
-		isSafe := true
 		vals := []int{}
 
 		for i := range f {
 			vals = append(vals, toInt(f[i]))
 		}
 
-		if !isMonotonous(vals) {
-			isSafe = false
-		}
-
-		for i := 1; i < len(vals); i++ {
-			d := abs(vals[i] - vals[i-1])
-
-			if d > 3 || d < 1 {
-				isSafe = false
-			}
-		}
-
-		if isSafe {
+		if isSafe(vals) {
 			safeC++
 		}
 	}
@@ -63,9 +51,29 @@ func partOne(file *os.File) {
 func partTwo(file *os.File) {
 	scanner := bufio.NewScanner(file)
 
+	safeC := 0
 	for scanner.Scan() {
 		text := scanner.Text()
 		f := strings.Fields(text)
+
+		vals := []int{}
+
+		for i := range f {
+			vals = append(vals, toInt(f[i]))
+		}
+
+		if isSafe(vals) {
+			safeC++
+			continue
+		}
+
+		for i := 0; i < len(vals); i++ {
+			temp := remove(vals, i)
+			if isSafe(temp) {
+				safeC++
+				break
+			}
+		}
 	}
 
 	fmt.Println("Part two: ", safeC)
@@ -105,3 +113,22 @@ func isMonotonous(inp []int) bool {
 	return increasing || decreasing
 }
 
+func remove(slice []int, index int) []int {
+	temp := append([]int{}, slice[:index]...)
+	temp = append(temp, slice[index+1:]...)
+	return temp
+}
+
+func isSafe(vals []int) bool {
+	if !isMonotonous(vals) {
+		return false
+	}
+
+	for i := 1; i < len(vals); i++ {
+		d := abs(vals[i] - vals[i-1])
+		if d > 3 || d < 1 {
+			return false
+		}
+	}
+	return true
+}
