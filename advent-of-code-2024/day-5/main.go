@@ -31,10 +31,8 @@ func partOne(file *os.File) int {
 	scanner := bufio.NewScanner(file)
 
 	order := make(map[string][2]int, 0)
-	// mid := make([]int, 0)
 	mul := 0
 	isOrderSection := true
-	// n := len(puzzle)
 
 	for scanner.Scan() {
 		text := scanner.Text()
